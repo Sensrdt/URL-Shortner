@@ -1,0 +1,4 @@
+{
+    "mongoURI" : "mongodb+srv://url:url@shortnercluster-pepxk.mongodb.net/test?retryWrites=true&w=majority",
+    "baseUrl" : "http://localhost:4040/"
+}
