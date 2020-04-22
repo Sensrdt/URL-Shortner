@@ -3,7 +3,8 @@ const router = express.Router();
 const validate = require('valid-url');
 const configuration = require('config');
 
-const Url = require('../model/storeUrlSchema');
+const DB = require('../model/storeUrlSchema');
+
 
 function generate()
 {
@@ -14,26 +15,42 @@ function generate()
     return result;
 }
 
+
 router.post('/shorten', async (req, res) => {
+
   const { longUrl } = req.body;
+  
   const baseUrl = configuration.get('baseUrl');
 
   if (!validate.isUri(baseUrl)) {
-    return res.status(401).json('Invalid base url');
+
+    console.log({
+      done : false,
+      desc : 'Base Url is not valid'
+    });
+
+
+    return res.status(401).send({
+      done : false,
+      desc : 'Base Url is not valid'
+    });
+
   }
 
   const urlCode = generate();
 
   if (validate.isUri(longUrl)) {
     try {
-      let url = await Url.findOne({ longUrl });
+      let url = await DB.findOne({ longUrl });
 
-      if (url) {
+      if (url) 
+      {
+        console.log(url);
         res.json(url);
       } else {
         const shortUrl = baseUrl + '/' + urlCode;
 
-        url = new Url({
+        url = new DB({
           long : longUrl,
           short : shortUrl,
           urlCode,
@@ -42,6 +59,7 @@ router.post('/shorten', async (req, res) => {
 
         await url.save();
 
+        console.log(url);
         res.json(url);
       }
     } catch (err) {

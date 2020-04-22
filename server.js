@@ -5,8 +5,10 @@ const app = express();
 
 connectDB();
 
-app.use(express.json());
+app.use(express.json({extented : false}));
 
+
+app.use('/', require('./routes/redirect'));
 app.use('/v1/', require('./routes/createUrl'));
 
 const PORT = 4040;
